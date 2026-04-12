@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useToast } from "./ToastProvider.jsx";
-import { AUTH_STORAGE_KEY } from "../constants/auth.js";
+import { AUTH_STORAGE_KEY, getAuth } from "../constants/auth.js";
 
 export default function ProtectedRoute({ children }) {
   const location = useLocation();
   const showToast = useToast();
   const notifiedRef = useRef(false);
 
-  const isAuthenticated = localStorage.getItem(AUTH_STORAGE_KEY) === "true";
+  const isAuthenticated = getAuth();
 
   useEffect(() => {
     if (!isAuthenticated && !notifiedRef.current) {

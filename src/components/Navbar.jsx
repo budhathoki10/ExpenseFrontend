@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AUTH_STORAGE_KEY } from "../constants/auth.js";
+import { AUTH_STORAGE_KEY, getAuth } from "../constants/auth.js";
 
 const Navbar = () => {
   const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => localStorage.getItem(AUTH_STORAGE_KEY) === "true",
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(() => getAuth());
 
   useEffect(() => {
-    setIsAuthenticated(localStorage.getItem(AUTH_STORAGE_KEY) === "true");
+    setIsAuthenticated(getAuth());
   }, [location.pathname]);
 
   useEffect(() => {
     const handleStorage = () => {
-      setIsAuthenticated(localStorage.getItem(AUTH_STORAGE_KEY) === "true");
+      setIsAuthenticated(getAuth());
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);

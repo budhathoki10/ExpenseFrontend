@@ -136,3 +136,139 @@
     transform: translateX(0) scale(1);
   }
 }
+
+/* Dashboard specific helpers */
+.shadow-card {
+  box-shadow: 0 12px 30px rgba(20, 60, 30, 0.15);
+}
+
+.rounded-[20px] {
+  border-radius: 20px;
+}
+
+/* Ewallet specific styles */
+.ewallet-card {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(196, 233, 190, 0.12)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ewallet-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  min-height: 56px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #052b14;
+  background: linear-gradient(90deg, #d3f0c6 0%, #9cd089 35%, #3f7e4e 100%);
+  box-shadow: 0 18px 40px rgba(24, 60, 30, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.9, 0.2, 1),
+    box-shadow 0.18s cubic-bezier(0.2, 0.9, 0.2, 1),
+    opacity 0.12s ease;
+}
+
+.ewallet-btn:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 28px 60px rgba(15, 50, 22, 0.34);
+}
+
+/* make paired ewallet buttons sit nicely when inside a flex row */
+.ewallet-btn + .ewallet-btn {
+  margin-left: 0.75rem;
+}
+
+/* Modal styles for ewallet form */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 60;
+}
+
+.modal-content {
+  width: 520px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(240, 240, 240, 0.95)
+  );
+  border-radius: 8px;
+  padding: 20px 22px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(10, 40, 20, 0.45);
+}
+
+.modal-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.tab.active {
+  background: linear-gradient(90deg, #d3f0c6 0%, #9cd089 40%, #3f7e4e 100%);
+  color: #042b13;
+}
+
+/* Single centered tab style */
+.single-tab {
+  width: 420px;
+  max-width: calc(100% - 40px);
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px 18px;
+  align-items: center;
+  background: transparent;
+  padding: 8px 6px;
+}
+
+.form-grid label {
+  color: #33433a;
+}
+
+.form-grid input[type="text"],
+.form-grid input[type="date"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  background: transparent;
+  outline: none;
+}
+
+.save-btn {
+  min-width: 160px;
+  background: linear-gradient(90deg, #3f7e4e 0%, #9cd089 60%);
+  color: #052b14;
+}

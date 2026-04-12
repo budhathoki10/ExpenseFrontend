@@ -22,15 +22,23 @@ export default function Signup() {
     e.preventDefault();
     if (!agreeToTerms) return;
 
+    if (form.password !== form.confirmPassword) {
+      toast("Passwords do not match", { type: "error" });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const data = await axios.post(
         "https://expenses-tracker-backend-ki3x.onrender.com/api/register",
         {
+          // include multiple keys to match various backend expectations
+          name: form.name,
           userName: form.name,
           email: form.email,
           password: form.password,
+          confirmPassword: form.confirmPassword,
           conformpassword: form.confirmPassword,
         },
         { withCredentials: true },
@@ -42,40 +50,29 @@ export default function Signup() {
         navigate("/otp", { state: { email: form.email } });
       }, 1000);
     } catch (error) {
-      console.log("err", error.response?.data?.message);
-      toast(
-        error.response?.data?.message ||
-          "Registration failed. Please try again.",
-        {
-          type: "error",
-        },
-      );
+      console.error("Registration error:", error);
 
-      if (error.response) {
-        // Backend responded with an error
-        console.log("erxxr", error.response.data.errors?.[0]?.message);
-        console.error("Registration error:", error.response.data.message);
-        if (error.response.data.errors?.[0]?.message) {
-          toast(
-            error.response.data.errors[0].message ||
-              "Registration failed. Please try again.",
-            { type: "error" },
-          );
+      // Prefer server-provided message for debugging
+      let errorMessage = "Registration failed. Please try again.";
+      if (error.response?.data) {
+        // show full server response message when available
+        if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.data.errors?.length > 0) {
+          errorMessage = error.response.data.errors[0].message;
+        } else {
+          // fallback: stringify response body
+          try {
+            errorMessage = JSON.stringify(error.response.data);
+          } catch (e) {
+            // ignore
+          }
         }
-        if (error.response.data.errors?.[1]?.message) {
-          toast(
-            error.response.data.errors[1].message ||
-              "Registration failed. Please try again.",
-            { type: "error" },
-          );
-        }
-      } else if (error.request) {
-        // Request was made but no response
-        console.error("No response received:", error.request);
-      } else {
-        // Something else happened
-        console.error("Error setting up request:", error.message);
+      } else if (error.message) {
+        errorMessage = error.message;
       }
+
+      toast(errorMessage, { type: "error" });
     } finally {
       setLoading(false);
     }

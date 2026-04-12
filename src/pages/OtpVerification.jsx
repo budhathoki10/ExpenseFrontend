@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { AUTH_STORAGE_KEY } from "../constants/auth";
+import { AUTH_STORAGE_KEY, setAuth } from "../constants/auth";
 
 export default function OtpVerification() {
   const navigate = useNavigate();
@@ -73,7 +73,8 @@ export default function OtpVerification() {
         { withCredentials: true },
       );
       console.log("OTP verification success:", data);
-      localStorage.setItem(AUTH_STORAGE_KEY, "true");
+      // mark user as authenticated (persist by default after verification)
+      setAuth(true, true);
       setSuccess(true);
       setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {

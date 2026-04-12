@@ -8,26 +8,39 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import OtpVerification from "./pages/OtpVerification";
 import Dashboard from "./pages/Dashboard";
+import Ewallet from "./pages/Ewallet";
+import SetGoals from "./pages/SetGoals";
+import History from "./pages/History";
+import Report from "./pages/Report";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import { AUTH_STORAGE_KEY } from "./constants/auth.js";
+import PublicRoute from "./components/PublicRoute.jsx";
+import { AUTH_STORAGE_KEY, getAuth } from "./constants/auth.js";
 
 function App() {
   const location = useLocation();
-  const hideNavbarRoutes = ["/login", "/signup", "/otp", "/dashboard"];
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => localStorage.getItem(AUTH_STORAGE_KEY) === "true",
-  );
+  const hideNavbarRoutes = [
+    "/login",
+    "/signup",
+    "/otp",
+    "/dashboard",
+    "/e-wallet",
+    "/set-goals",
+    "/history",
+    "/report",
+  ];
+  const [isAuthenticated, setIsAuthenticated] = useState(() => getAuth());
 
   useEffect(() => {
     const handleStorage = () => {
-      setIsAuthenticated(localStorage.getItem(AUTH_STORAGE_KEY) === "true");
+      // handle localStorage changes (cross-tab) and refresh auth state
+      setIsAuthenticated(getAuth());
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   useEffect(() => {
-    setIsAuthenticated(localStorage.getItem(AUTH_STORAGE_KEY) === "true");
+    setIsAuthenticated(getAuth());
   }, [location.pathname]);
 
   const showNavbar =
@@ -38,17 +51,91 @@ function App() {
       {showNavbar && <Navbar />}
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/otp" element={<OtpVerification />} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <Home />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <PublicRoute>
+                <AboutUs />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <PublicRoute>
+                <ContactUs />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <Signup />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/otp"
+            element={
+              <PublicRoute>
+                <OtpVerification />
+              </PublicRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/e-wallet"
+            element={
+              <ProtectedRoute>
+                <Ewallet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/set-goals"
+            element={
+              <ProtectedRoute>
+                <SetGoals />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <ProtectedRoute>
+                <History />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/report"
+            element={
+              <ProtectedRoute>
+                <Report />
               </ProtectedRoute>
             }
           />

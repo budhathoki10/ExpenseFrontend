@@ -3,7 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import logSignImage from "../assets/log&sign.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { AUTH_STORAGE_KEY } from "../constants/auth.js";
+import {
+  AUTH_STORAGE_KEY,
+  TOKEN_STORAGE_KEY,
+  setAuth,
+  setToken,
+  setUserName,
+} from "../constants/auth.js";
 import BackHomeButton from "../components/BackHomeButton.jsx";
 
 export default function Login() {
@@ -35,8 +41,33 @@ export default function Login() {
       if (response.status === 200) {
         console.log("Login successfully");
         toast("Login Successful", { type: "success", autoClose: 1000 });
-        localStorage.setItem(AUTH_STORAGE_KEY, "true");
-        setTimeout(() => navigate("/dashboard"), 1500);
+        // persist login according to remember checkbox
+        setAuth(true, remember);
+        // store token if backend returned one (supports both 'token' and 'accessToken')
+        const token =
+          response?.data?.token ||
+          response?.data?.accessToken ||
+          response?.data?.data?.token;
+        if (token) {
+          setToken(token, remember);
+        }
+        // store display name if backend returned it (prefer userName, then name, then email)
+        const resp = response?.data || {};
+        const maybeUser = resp.user || resp.data || resp;
+        try {
+          const displayRaw =
+            maybeUser?.userName || maybeUser?.name || maybeUser?.email || null;
+          if (displayRaw) {
+            const display =
+              typeof displayRaw === "string" && displayRaw.includes("@")
+                ? displayRaw.split("@")[0]
+                : displayRaw;
+            setUserName(display, remember);
+          }
+        } catch (e) {
+          // ignore
+        }
+        navigate("/dashboard");
       }
     } catch (error) {
       toast(
@@ -50,8 +81,16 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href =
-      "https://expenses-tracker-backend-ki3x.onrender.com/api/loginwithgoogle";
+    try {
+      window.location.href =
+        "https://expenses-tracker-backend-ki3x.onrender.com/api/loginwithgoogle";
+    } catch (error) {
+      toast("Google login failed. Please try again.", {
+        type: "error",
+        autoClose: 1000,
+      });
+    }
+    navigate("/dashboard");
   };
 
   return (
