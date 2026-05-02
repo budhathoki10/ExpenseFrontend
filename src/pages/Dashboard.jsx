@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../constants/api.js";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { getToken, getUserName, clearAuth } from "../constants/auth.js";
 import WeeklyActivity from "../components/Dashboard/WeeklyActivity";
 import ExpenseStatistics from "../components/Dashboard/ExpenseStatistics";
@@ -247,6 +248,15 @@ export default function Dashboard() {
   });
 
   const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Sign out",
+      text: "Are you sure you want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
     try {
       await axios.post("/logout", {}, { withCredentials: true });
       toast("Logged out successfully", { type: "success", autoClose: 1500 });
@@ -261,7 +271,7 @@ export default function Dashboard() {
     page: {
       minHeight: "100vh",
       fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
-      background: "linear-gradient(160deg, #e8f5ec 0%, #c8e6d0 40%, #6ab87a 80%, #2d7a3a 100%)",
+      background: "#dce7d7",
       display: "flex",
       flexDirection: "column",
     },
@@ -374,6 +384,19 @@ export default function Dashboard() {
 
   const todayStr = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
+  // Digital clock state
+  const [clock, setClock] = useState(() => {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  });
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      setClock(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div style={S.page}>
       <UserNavbar />
@@ -410,7 +433,10 @@ export default function Dashboard() {
                   <p style={S.greetSub}>Here's your financial overview for this month.</p>
                 </div>
               </div>
-              <span style={S.greetDate}>{todayStr}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                <span style={S.greetDate}>{todayStr}</span>
+                <span style={{ ...S.greetDate, fontSize: 16, fontWeight: 600, background: '#f3f4f6', color: 'red', border: 'none', padding: '4px 14px' }}>{clock}</span>
+              </div>
             </div>
 
             {/* ── Stat Strip ── */}

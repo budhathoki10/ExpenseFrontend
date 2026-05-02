@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import landing from "./assets/landingImange.png";
 import Home from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
@@ -43,12 +44,9 @@ function App() {
     setIsAuthenticated(getAuth());
   }, [location.pathname]);
 
-  const showNavbar =
-    !hideNavbarRoutes.includes(location.pathname) && !isAuthenticated;
-
+  // Navbar is now rendered inside Home.jsx for the landing page
   return (
-    <div className="min-h-screen bg-[#111111]">
-      {showNavbar && <Navbar />}
+    <div className="min-h-screen">
       <main>
         <Routes>
           <Route
@@ -56,22 +54,6 @@ function App() {
             element={
               <PublicRoute>
                 <Home />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <PublicRoute>
-                <AboutUs />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <PublicRoute>
-                <ContactUs />
               </PublicRoute>
             }
           />

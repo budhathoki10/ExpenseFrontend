@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "../../constants/api.js";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { clearAuth } from "../../constants/auth.js";
 import {
   Home,
@@ -30,6 +31,15 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Sign out",
+      text: "Are you sure you want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
     try {
       await axios.post("/logout", {}, { withCredentials: true });
       toast("You have logged out successfully", {

@@ -1,4 +1,5 @@
 import React from "react";
+import landing from "../assets/landingImange.png";
 
 const highlights = [
   { label: "Budgets balanced", value: "12k+" },
@@ -8,7 +9,15 @@ const highlights = [
 
 export default function AboutUs() {
   return (
-    <section className="min-h-screen bg-[#111111] text-white flex items-center justify-center px-6 py-16">
+    <section
+      className="min-h-screen text-white flex items-center justify-center px-6 py-16"
+      style={{
+        backgroundImage: `url(${landing})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="max-w-4xl w-full bg-[#1b1b1b] border border-[#2c2c2c] rounded-3xl p-10 shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
         <p className="text-sm uppercase tracking-[0.4em] text-[#6ea16a] mb-6">
           OUR WHY

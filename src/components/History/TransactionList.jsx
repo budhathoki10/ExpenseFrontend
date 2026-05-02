@@ -31,10 +31,11 @@ function formatDate(d) {
 }
 
 function toCSV(rows) {
-  const header = ["Date", "Category", "Type", "Amount", "Note"];
+  const header = ["Date", "Category", "Account", "Type", "Amount", "Note"];
   const lines = rows.map((r) => [
     r.date,
     r.category || "",
+    r.account || "",
     r.type || "",
     r.amount,
     (r.description || r.note || "").replace(/\n/g, " "),
@@ -92,6 +93,7 @@ export default function TransactionList() {
         id: t._id, // Assuming the transaction object has an _id field
         date: t.Date || t.date || t.createdAt || "",
         category: normalizeCategory(t.category || t.categoryName || t.raw?.category || ""),
+        account: t.account || t.accountName || t.raw?.account || "",
         type: t.type || t.transactionType || "",
         amount: t.amount || t.total || 0,
         description: t.description || t.note || "",
@@ -386,6 +388,7 @@ const downloadCsv = async () => {
               <tr className="text-sm text-gray-600 border-b">
                 <th className="py-4">Date</th>
                 <th className="py-4">Category</th>
+                <th className="py-4">Account</th>
                 <th className="py-4">Type</th>
                 <th className="py-4">Amount</th>
                 <th className="py-4"></th>
@@ -411,12 +414,11 @@ const downloadCsv = async () => {
                       {formatDate(t.date)}
                     </td>
                     <td className="py-6 align-top w-1/4">
-                      <div className="font-medium text-gray-800">
-                        {t.category}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {t.description}
-                      </div>
+                      <div className="font-medium text-gray-800">{t.category}</div>
+                      <div className="text-xs text-gray-500 mt-1">{t.description}</div>
+                    </td>
+                    <td className="py-6 align-top w-1/6">
+                      <div className="text-sm text-gray-700">{t.account || "-"}</div>
                     </td>
                     <td className="py-6 align-top w-1/4">{t.type}</td>
                     <td className="py-6 align-top w-1/6">

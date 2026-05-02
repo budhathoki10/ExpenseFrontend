@@ -267,6 +267,23 @@
   outline: none;
 }
 
+.form-grid select {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  background: transparent;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: inherit;
+}
+
+.form-grid select::-ms-expand {
+  display: none;
+}
+
 .save-btn {
   min-width: 160px;
   background: linear-gradient(90deg, #3f7e4e 0%, #9cd089 60%);

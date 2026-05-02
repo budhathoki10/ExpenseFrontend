@@ -42,10 +42,9 @@ export default function ExpenseStatistics({
       <div className="mb-4 mt-1">
         <span className="text-sm font-medium">Spending Monthly Overview</span>
       </div>
-
-      <div className="flex-1 flex items-start justify-between">
+      <div className="flex-1 flex items-center justify-between">
         {/* Left: Donut chart with center total */}
-        <div className="flex items-start gap-6 pl-2">
+        <div className="flex items-center gap-6 pl-2">
           <div className="relative w-56 h-56">
             {/* build background from slices or fallback */}
             <div

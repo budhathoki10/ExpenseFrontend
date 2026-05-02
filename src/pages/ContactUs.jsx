@@ -1,21 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
+import landing from "../assets/landingImange.png";
+import axios from "../constants/api.js";
+import { toast } from "react-toastify";
 
 const cards = [
   {
     title: "Drop us a note",
-    body: "hello@spendwise.app",
+    body: "Spend Wise Team",
     hint: "We answer within one business day.",
   },
   {
     title: "Ping us on chat",
-    body: "In-app chat 9am–6pm, Mon–Fri",
+    body: "Every time you open the app",
     hint: "Powered by real humans.",
   },
 ];
 
 export default function ContactUs() {
+  const [userName, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setDescription] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!userName || !email || !message) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    setSending(true);
+    try {
+      console.log("helloooooooooo")
+      // API expects authentication; include credentials. Adjust endpoint if needed.
+      await axios.post(
+        "/sendMessage",
+        { userName, email, message },
+        { withCredentials: true },
+      );
+
+      toast.success("Message sent. We'll get back to you soon.", { autoClose: 1500 });
+      setName("");
+      setEmail("");
+      setDescription("");
+    } catch (err) {
+      console.error("Failed to send contact message:", err);
+      toast.error("Failed to send message. Please try again.", { autoClose: 1500 });
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
-    <section className="min-h-screen bg-[#111111] text-white flex items-center justify-center px-6 py-16">
+    <section
+      className="min-h-screen text-white flex items-center justify-center px-6 py-16"
+      style={{
+        backgroundImage: `url(${landing})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="max-w-3xl w-full bg-[#1c1c1c] border border-[#2b2b2b] rounded-[32px] p-10 space-y-8 shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
         <div>
           <p className="text-xs uppercase tracking-[0.5em] text-[#6ea16a] mb-3">
@@ -45,7 +89,7 @@ export default function ContactUs() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-4 border border-[#2b2b2b] rounded-2xl px-5 py-4">
           <p className="text-gray-300 text-sm">
-            Prefer voice? Call +977-9800-SPENDW (10am–4pm, Sun–Thu)
+            Prefer voice? Call 9812345678 (10am–4pm, Sun–Fri)
           </p>
           <a
             href="mailto:hello@spendwise.app"
@@ -54,6 +98,46 @@ export default function ContactUs() {
             Send quick email
           </a>
         </div>
+
+        <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+          <div>
+            <label className="block text-sm text-gray-300 mb-2">Name</label>
+            <input
+              value={userName}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 rounded bg-[#0f0f0f] border border-[#2b2b2b] text-white"
+              placeholder="Your name"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-300 mb-2">Email</label>
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 rounded bg-[#0f0f0f] border border-[#2b2b2b] text-white"
+              placeholder="you@example.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-300 mb-2">Message</label>
+            <textarea
+              value={message}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className="w-full px-4 py-2 rounded bg-[#0f0f0f] border border-[#2b2b2b] text-white"
+              placeholder="How can we help?"
+            />
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={sending}
+              className="px-6 py-2 rounded bg-[#5d8d5a] hover:bg-[#4d784a] text-white font-semibold"
+            >
+              {sending ? "Sending..." : "Send Message"}
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   );

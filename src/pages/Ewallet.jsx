@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../constants/api.js";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import {
   getToken,
   getUserName,
@@ -34,6 +35,15 @@ export default function Ewallet() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Sign out",
+      text: "Are you sure you want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
     try {
       await axios.post("/logout", {}, { withCredentials: true });
       toast("You have logged out successfully", {
@@ -197,17 +207,11 @@ export default function Ewallet() {
     `Try keeping at least Rs. ${reserveAmount.toLocaleString(undefined, {
       maximumFractionDigits: 0,
     })} as emergency reserve.`,
-    "Review your History page weekly and edit wrong entries quickly.",
+    "Review your History page timely and edit wrong entries quickly.",
   ];
 
   return (
-    <div
-      className="min-h-screen text-gray-900 font-sans flex flex-col overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, #ffffff 0%, #fdfdfd 100%, #ffffff 100%)",
-      }}
-    >
+    <div className="min-h-screen bg-[#dce7d7] text-gray-900 font-sans flex flex-col overflow-hidden">
       <UserNavbar />
 
       {/* Main Layout */}
@@ -215,14 +219,7 @@ export default function Ewallet() {
         <Sidebar />
 
         {/* Content Area */}
-        <main
-          className="flex-1 relative overflow-y-auto pb-20 pt-16"
-          style={{
-            marginLeft: "var(--sidebar-width, 256px)",
-            background:
-              "linear-gradient(180deg, rgba(255,255,255,0.18), rgba(8,42,22,0.12))",
-          }}
-        >
+        <main className="flex-1 relative overflow-y-auto pb-20 pt-16" style={{ marginLeft: "var(--sidebar-width, 256px)", background: "transparent" }}>
           <div className="p-8 lg:p-10 w-full max-w-full">
             <h1 className="text-4xl font-bold text-[#083b22] mb-6">E-wallet</h1>
 

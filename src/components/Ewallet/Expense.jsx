@@ -11,7 +11,7 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
     date: new Date().toISOString().slice(0, 10),
     amount: "",
     category: "",
-    account: "",
+    account: "Cash",
     note: "",
   });
 
@@ -92,7 +92,7 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
         date: new Date().toISOString().slice(0, 10),
         amount: "",
         category: "",
-        account: "",
+        account: "Cash",
         note: "",
       });
     } catch (err) {
@@ -166,13 +166,17 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
               onChange={handleChange}
             />
 
-            <label>Account</label>
-            <input
-              type="text"
-              name="account"
-              value={form.account}
-              onChange={handleChange}
-            />
+
+            <label className="flex items-center gap-1">Account</label>
+            <div className="relative">
+              <select name="account" value={form.account} onChange={handleChange} className="pr-8">
+                <option value="Cash">Cash</option>
+                <option value="Bank">Bank</option>
+              </select>
+              <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8L10 12L14 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </span>
+            </div>
 
             <label>Note</label>
             <input
