@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../constants/api.js";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import {
-  getToken,
-  getUserName,
-  clearAuth,
-} from "../constants/auth.js";
+import { getToken, getUserName, clearAuth } from "../constants/auth.js";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -196,7 +192,10 @@ export default function Ewallet() {
   const spendableAmount = Math.max(0, numericBalance - reserveAmount);
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  const remainingDays = Math.max(1, lastDayOfMonth.getDate() - today.getDate() + 1);
+  const remainingDays = Math.max(
+    1,
+    lastDayOfMonth.getDate() - today.getDate() + 1,
+  );
   const suggestedDailyBudget = spendableAmount / remainingDays;
   const suggestionItems = [
     numericBalance <= 0
@@ -211,7 +210,7 @@ export default function Ewallet() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#dce7d7] text-gray-900 font-sans flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-[#] text-gray-900 font-sans flex flex-col overflow-hidden">
       <UserNavbar />
 
       {/* Main Layout */}
@@ -219,7 +218,13 @@ export default function Ewallet() {
         <Sidebar />
 
         {/* Content Area */}
-        <main className="flex-1 relative overflow-y-auto pb-20 pt-16" style={{ marginLeft: "var(--sidebar-width, 256px)", background: "transparent" }}>
+        <main
+          className="flex-1 relative overflow-y-auto pb-20 pt-16"
+          style={{
+            marginLeft: "var(--sidebar-width, 256px)",
+            background: "transparent",
+          }}
+        >
           <div className="p-8 lg:p-10 w-full max-w-full">
             <h1 className="text-4xl font-bold text-[#083b22] mb-6">E-wallet</h1>
 
@@ -235,9 +240,15 @@ export default function Ewallet() {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs uppercase tracking-wide text-emerald-700 font-semibold">Add Money</p>
-                        <p className="text-xl font-bold text-emerald-900 mt-1">Income</p>
-                        <p className="text-sm text-emerald-800/80 mt-1">Record salary, bonus or other deposits.</p>
+                        <p className="text-xs uppercase tracking-wide text-emerald-700 font-semibold">
+                          Add Money
+                        </p>
+                        <p className="text-xl font-bold text-emerald-900 mt-1">
+                          Income
+                        </p>
+                        <p className="text-sm text-emerald-800/80 mt-1">
+                          Record salary, bonus or other deposits.
+                        </p>
                       </div>
                       <ArrowUpRight className="w-8 h-8 text-emerald-700" />
                     </div>
@@ -248,9 +259,15 @@ export default function Ewallet() {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs uppercase tracking-wide text-rose-700 font-semibold">Spend Money</p>
-                        <p className="text-xl font-bold text-rose-900 mt-1">Expense</p>
-                        <p className="text-sm text-rose-800/80 mt-1">Track bills, shopping and daily spending.</p>
+                        <p className="text-xs uppercase tracking-wide text-rose-700 font-semibold">
+                          Spend Money
+                        </p>
+                        <p className="text-xl font-bold text-rose-900 mt-1">
+                          Expense
+                        </p>
+                        <p className="text-sm text-rose-800/80 mt-1">
+                          Track bills, shopping and daily spending.
+                        </p>
                       </div>
                       <ArrowDownRight className="w-8 h-8 text-rose-700" />
                     </div>
@@ -265,14 +282,21 @@ export default function Ewallet() {
                     Smart Budget Planner
                   </h3>
                   <p className="text-sm text-gray-700 mb-4">
-                    Suggested plan from your current wallet balance to avoid overspending before month-end.
+                    Suggested plan from your current wallet balance to avoid
+                    overspending before month-end.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="rounded-xl border border-blue-100 bg-blue-50/70 p-4">
-                      <p className="text-[11px] text-blue-700 font-semibold uppercase tracking-wide">Spendable Now</p>
+                      <p className="text-[11px] text-blue-700 font-semibold uppercase tracking-wide">
+                        Spendable Now
+                      </p>
                       <p className="text-lg font-bold text-blue-900 mt-1 leading-tight">
-                        Rs. {spendableAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        Rs.{" "}
+                        {spendableAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </p>
                     </div>
                     <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4">
@@ -281,15 +305,27 @@ export default function Ewallet() {
                         Keep as Reserve
                       </p>
                       <p className="text-lg font-bold text-emerald-900 mt-1 leading-tight">
-                        Rs. {reserveAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        Rs.{" "}
+                        {reserveAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </p>
                     </div>
                     <div className="rounded-xl border border-amber-100 bg-amber-50/70 p-4">
-                      <p className="text-[11px] text-amber-700 font-semibold uppercase tracking-wide">Daily Limit</p>
-                      <p className="text-lg font-bold text-amber-900 mt-1 leading-tight">
-                        Rs. {suggestedDailyBudget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      <p className="text-[11px] text-amber-700 font-semibold uppercase tracking-wide">
+                        Daily Limit
                       </p>
-                      <p className="text-xs text-amber-700 mt-1">for next {remainingDays} day(s)</p>
+                      <p className="text-lg font-bold text-amber-900 mt-1 leading-tight">
+                        Rs.{" "}
+                        {suggestedDailyBudget.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </p>
+                      <p className="text-xs text-amber-700 mt-1">
+                        for next {remainingDays} day(s)
+                      </p>
                     </div>
                   </div>
 
@@ -305,7 +341,10 @@ export default function Ewallet() {
                   </h3>
                   <ul className="space-y-3 text-sm text-gray-700">
                     {suggestionItems.map((item, idx) => (
-                      <li key={idx} className="rounded-lg border border-amber-100 bg-amber-50/70 px-3 py-2">
+                      <li
+                        key={idx}
+                        className="rounded-lg border border-amber-100 bg-amber-50/70 px-3 py-2"
+                      >
                         {item}
                       </li>
                     ))}
