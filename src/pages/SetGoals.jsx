@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../constants/api.js";
 import { toast } from "react-toastify";
 import { getToken } from "../constants/auth.js";
@@ -21,6 +22,7 @@ import {
   Search,
   ArrowUpDown,
 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 // ── Constants ──────────────────────────────────────────────
 const GOALS_PER_PAGE = 6;
@@ -36,9 +38,6 @@ const btnPrimary =
   "flex-1 py-2.5 rounded-xl bg-[#2d6a3f] text-white text-sm font-semibold hover:bg-[#245534] transition-colors disabled:opacity-60";
 const btnSecondary =
   "flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors";
-
-// ✅ Replace with this
-import confetti from "canvas-confetti";
 
 const launchConfetti = () => {
   confetti({
@@ -277,7 +276,7 @@ export default function SetGoals() {
 
   // Search & Sort
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("priority"); // priority | name | progress | deadline
+  const [sortBy, setSortBy] = useState("priority");
   const [sortDir, setSortDir] = useState("asc");
 
   const [createForm, setCreateForm] = useState({
@@ -540,7 +539,6 @@ export default function SetGoals() {
             {/* Search & Sort bar */}
             {goals.length > 0 && (
               <div className="flex flex-wrap items-center gap-3 mb-6">
-                {/* Search */}
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
@@ -553,8 +551,6 @@ export default function SetGoals() {
                     }}
                   />
                 </div>
-
-                {/* Sort buttons */}
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs text-gray-400 font-medium">
                     Sort by:
