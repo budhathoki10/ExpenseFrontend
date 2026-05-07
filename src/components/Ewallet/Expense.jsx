@@ -44,6 +44,7 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       function toApiIso(dateStr) {
         const isoDateOnly = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -56,6 +57,32 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
           return new Date(dateStr).toISOString();
         } catch {
           return dateStr;
+=======
+      function toApiDateOnly(dateStr) {
+        const isoDateOnly = /^\d{4}-\d{2}-\d{2}$/;
+        if (typeof dateStr === "string" && isoDateOnly.test(dateStr)) {
+          return dateStr;
+        }
+
+        const slash = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+        if (typeof dateStr === "string" && slash.test(dateStr)) {
+          const [a, b, y] = dateStr.split("/").map((n) => parseInt(n, 10));
+          const dd = a > 12 ? a : b;
+          const mm = a > 12 ? b : a;
+          const pad = (n) => String(n).padStart(2, "0");
+          return `${y}-${pad(mm)}-${pad(dd)}`;
+        }
+
+        try {
+          const dt = new Date(dateStr);
+          if (Number.isNaN(dt.getTime())) return "";
+          const y = dt.getFullYear();
+          const m = String(dt.getMonth() + 1).padStart(2, "0");
+          const d = String(dt.getDate()).padStart(2, "0");
+          return `${y}-${m}-${d}`;
+        } catch {
+          return "";
+>>>>>>> sahil
         }
       }
 
@@ -65,11 +92,25 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
         return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
       };
 
+<<<<<<< HEAD
       const isoDate = toApiIso(currentForm.date);
 
       const payload = {
         date: isoDate,
         Date: isoDate,
+=======
+      const dateOnly = toApiDateOnly(currentForm.date);
+      if (!dateOnly) {
+        toast("Please select a valid date", { type: "error" });
+        return;
+      }
+
+      const payload = {
+        date: dateOnly,
+        Date: dateOnly,
+        transactionDate: dateOnly,
+        transaction_date: dateOnly,
+>>>>>>> sahil
         amount:
           parseFloat(currentForm.amount.toString().replace(/[^0-9.-]+/g, "")) ||
           0,
@@ -80,6 +121,11 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
         type: "Expense",
       };
 
+<<<<<<< HEAD
+=======
+      console.log("Expense: sending payload", payload);
+
+>>>>>>> sahil
       const token = getToken();
       const config = {
         withCredentials: true,
@@ -160,8 +206,20 @@ export default function Expense({ show, onClose, onSaved, onOptimisticSave }) {
               const parsed = data?.voiceCommand?.parsedData || data?.parsedData;
 
               if (parsed) {
+<<<<<<< HEAD
                 const updatedForm = {
                   ...form,
+=======
+                const parsedDate =
+                  parsed.date ||
+                  parsed.Date ||
+                  parsed.transactionDate ||
+                  parsed.when ||
+                  null;
+                const updatedForm = {
+                  ...form,
+                  date: parsedDate ? String(parsedDate) : form.date,
+>>>>>>> sahil
                   amount: parsed.amount?.toString() || form.amount,
                   category: parsed.category || form.category,
                   note: parsed.description || form.note,
