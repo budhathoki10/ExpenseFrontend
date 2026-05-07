@@ -1,0 +1,366 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.toast-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 1200;
+}
+
+.home-arrow-button {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, #5d8d5a, #4a7247);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 14px 28px rgba(44, 83, 49, 0.35);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+  z-index: 50;
+}
+
+.home-arrow-button:hover {
+  transform: translate(-2px, 1px) scale(1.05);
+  background: linear-gradient(145deg, #6fa56c, #4f7b4c);
+  box-shadow: 0 18px 36px rgba(44, 83, 49, 0.45);
+}
+
+.home-arrow-button:focus-visible {
+  outline: 3px solid rgba(93, 141, 90, 0.35);
+  outline-offset: 4px;
+}
+
+.home-arrow-icon {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+}
+
+.auth-button {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-button:hover {
+  transform: translateY(-4px);
+}
+
+.auth-button--dark {
+  background: #1c1c1c;
+  color: #c0c0c0;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.auth-button--dark:hover {
+  color: #ffffff;
+  background: #272727;
+}
+
+.auth-button--light {
+  background: #ffffff;
+  color: #111111;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.auth-button--light:hover {
+  background: #f5f5f5;
+  color: #111111;
+}
+
+.toast-notification {
+  min-width: 280px;
+  max-width: 360px;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  animation: toast-slide-in 0.35s ease forwards;
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #2f5c2b, #54a05d);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #972828, #c94b4b);
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.toast-close:hover {
+  opacity: 0.75;
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(120%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Dashboard specific helpers */
+.shadow-card {
+  box-shadow: 0 12px 30px rgba(20, 60, 30, 0.15);
+}
+
+.rounded-20 {
+  border-radius: 20px;
+}
+
+/* Ewallet specific styles */
+.ewallet-card {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(196, 233, 190, 0.12)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ewallet-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  min-height: 56px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #052b14;
+  background: linear-gradient(90deg, #d3f0c6 0%, #9cd089 35%, #3f7e4e 100%);
+  box-shadow: 0 18px 40px rgba(24, 60, 30, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.9, 0.2, 1),
+    box-shadow 0.18s cubic-bezier(0.2, 0.9, 0.2, 1),
+    opacity 0.12s ease;
+}
+
+.ewallet-btn:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 28px 60px rgba(15, 50, 22, 0.34);
+}
+
+/* make paired ewallet buttons sit nicely when inside a flex row */
+.ewallet-btn + .ewallet-btn {
+  margin-left: 0.75rem;
+}
+
+/* Modal styles for ewallet form */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 60;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 540px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: slideUp 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.modal-close:hover {
+  color: #1f2937;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.tab.active {
+  background: linear-gradient(90deg, #d3f0c6 0%, #9cd089 40%, #3f7e4e 100%);
+  color: #042b13;
+}
+
+/* Single centered tab style */
+.single-tab {
+  width: 420px;
+  max-width: calc(100% - 40px);
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  background: transparent;
+}
+
+.form-grid label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.form-grid input[type="text"],
+.form-grid input[type="date"],
+.form-grid textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-grid input[type="text"]:focus,
+.form-grid input[type="date"]:focus,
+.form-grid textarea:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 32px;
+}
+
+.form-grid select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-grid select::-ms-expand {
+  display: none;
+}
+
+.save-btn {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
