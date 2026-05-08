@@ -39,94 +39,100 @@ const btnPrimary =
 const btnSecondary =
   "flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors";
 
-// ── Confetti — drops from the very top of the screen ──────
 const launchConfetti = () => {
-  const colors = [
-    "#2d6a3f",
-    "#52a067",
-    "#f59e0b",
-    "#3b82f6",
-    "#ec4899",
-    "#2e83b5",
-  ];
+  const colors = ["#2d6a3f", "#52a067", "#f59e0b", "#3b82f6", "#ec4899"];
 
-  // first wave - all 3 positions at once
+  const triangle = confetti.shapeFromPath({
+    path: "M0 10 L10 -10 L-10 -10 Z",
+  });
+
+  // const star = confetti.shapeFromPath({
+  //   path: "M0-10 2.9-4H9.5L4.8.9 6.5 8 0 4l-6.5 4 1.7-7.1L-9.5-4h6.6Z",
+  // });
+
+  const shapes = ["square", "circle", triangle];
+
   confetti({
-    particleCount: 50,
+    particleCount: 120,
     angle: 60,
     spread: 70,
-    origin: { x: 0, y: 0 },
+    origin: { x: 0, y: 1 },
     colors,
-    gravity: 1,
+    gravity: 0.5,
     scalar: 1.8,
     drift: 0.5,
-    ticks: 250,
+    ticks: 200,
+    shapes,
   });
 
   confetti({
-    particleCount: 60,
-    angle: 90,
-    spread: 100,
-    origin: { x: 0.5, y: 0 },
-    colors,
-    gravity: 1,
-    scalar: 1.8,
-    drift: 0,
-    ticks: 250,
-  });
-
-  confetti({
-    particleCount: 50,
+    particleCount: 120,
     angle: 120,
     spread: 70,
-    origin: { x: 1, y: 0 },
+    origin: { x: 1, y: 1 },
     colors,
-    gravity: 1,
+    gravity: 0.5,
     scalar: 1.8,
     drift: -0.5,
-    ticks: 250,
+    ticks: 200,
+    shapes,
   });
 
-  // second wave at 0.8s
   setTimeout(() => {
     confetti({
-      particleCount: 25,
-      angle: 90,
-      spread: 120,
-      origin: { x: 0.5, y: 0 },
-      colors,
-      gravity: 1,
-      scalar: 2,
-      ticks: 250,
-    });
-  }, 800);
-
-  // third wave at 1.6s
-  setTimeout(() => {
-    confetti({
-      particleCount: 20,
+      particleCount: 100,
       angle: 60,
       spread: 80,
-      origin: { x: 0.2, y: 0 },
+      origin: { x: 0, y: 1 },
       colors,
-      gravity: 1,
-      scalar: 1.8,
-      ticks: 250,
+      gravity: 0.4,
+      scalar: 2,
+      drift: 0.3,
+      ticks: 100,
+      shapes,
     });
     confetti({
-      particleCount: 20,
+      particleCount: 100,
       angle: 120,
       spread: 80,
-      origin: { x: 0.8, y: 0 },
+      origin: { x: 1, y: 1 },
       colors,
-      gravity: 1,
-      scalar: 1.8,
-      ticks: 250,
+      gravity: 0.4,
+      scalar: 2,
+      drift: -0.3,
+      ticks: 100,
+      shapes,
     });
-  }, 0);
+  }, 1000);
+
+  setTimeout(() => {
+    confetti({
+      particleCount: 80,
+      angle: 75,
+      spread: 60,
+      origin: { x: 0.1, y: 1 },
+      colors,
+      gravity: 0.3,
+      scalar: 1.8,
+      drift: 0.2,
+      ticks: 100,
+      shapes,
+    });
+    confetti({
+      particleCount: 80,
+      angle: 105,
+      spread: 60,
+      origin: { x: 0.9, y: 1 },
+      colors,
+      gravity: 0.3,
+      scalar: 1.8,
+      drift: -0.2,
+      ticks: 100,
+      shapes,
+    });
+  }, 1500);
 };
 
-// ── Small reusable components ──────────────────────────────
 const PriorityBadge = ({ priority }) => (
   <span
     className={`text-[11px] font-semibold uppercase tracking-wide px-2.5 py-0.5 rounded-full ${PRIORITY_STYLES[priority]}`}
