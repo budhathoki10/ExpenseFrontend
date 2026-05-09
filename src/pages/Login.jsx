@@ -80,15 +80,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    try {
-      window.location.href = "/loginwithgoogle";
-    } catch (error) {
-      toast("Google login failed. Please try again.", {
-        type: "error",
-        autoClose: 1000,
-      });
-    }
-    navigate("/dashboard");
+    window.location.href = "/api/loginwithgoogle";
   };
 
   return (

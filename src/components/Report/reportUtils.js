@@ -36,40 +36,24 @@ export function labelPoint(cx, cy, r, angleDeg) {
 }
 
 export function buildMonthlySummaryText({
-  income,
   expense,
-  balance,
   topCategoryName,
   topCategoryPct,
 }) {
-  const inc = safeNumber(income);
   const exp = safeNumber(expense);
-  const bal = safeNumber(balance);
-  const ratio = inc > 0 ? exp / inc : exp > 0 ? 1 : 0;
-
-  const balanced = inc > 0 && Math.abs(inc - exp) / inc <= 0.12;
-  const expenseHeavy = !balanced && (inc === 0 ? exp > 0 : exp > inc);
-
-  const lead = balanced
-    ? "This month, your financial activity reflects a balanced pattern."
-    : expenseHeavy
-      ? "This month, your spending was higher than your income, so cash flow looks expense-heavy."
-      : "This month, your income stayed ahead of expenses, so you built some savings momentum.";
+  const lead = exp > 0
+    ? `This month, you spent Rs. ${formatMoney(exp)} in tracked expenses.`
+    : "No expense data is available for this month yet.";
 
   const focus = topCategoryName
-    ? ` A significant portion of expenses went to ${topCategoryName}${topCategoryPct ? ` (~${topCategoryPct}%)` : ""}.`
+    ? ` The largest share went to ${topCategoryName}${topCategoryPct ? ` (~${topCategoryPct}%)` : ""}.`
     : "";
 
-  const close = expenseHeavy
-    ? " Try tightening discretionary purchases and keep logging every transaction for better control."
-    : ratio < 0.5
-      ? " You're spending under control — consider allocating a bit more toward goals or savings."
-      : " You're doing fine — a small budget check-in can keep you on track.";
+  const close = exp > 0
+    ? " Keep an eye on your biggest categories to optimize spending for next month."
+    : " Log new expenses to generate richer reports.";
 
-  const extra =
-    bal > 0 ? ` Current net balance is Rs. ${formatMoney(bal)}.` : "";
-
-  return `${lead}${focus}${extra}${close}`.trim();
+  return `${lead}${focus}${close}`.trim();
 }
 
 export function buildSuggestionAndOpportunity({ income, expense }) {

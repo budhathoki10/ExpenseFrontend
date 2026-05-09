@@ -96,23 +96,46 @@ function computeWeeklyFromTransactions(transactions) {
     const mid = hiDay
       ? ` The highest expenses occurred on ${hiDay}, indicating possible lifestyle or discretionary spending during these periods.`
       : "";
-    const close =
-      totalIncome > 0
-        ? " Your income remained relatively stable, with consistent deposits throughout the week."
-        : "";
 
     const end =
-      totalExpense > totalIncome
-        ? " Overall, your financial activity suggests higher spending than income — consider reducing expenses on high-spending days to improve balance and savings."
-        : " Overall, your financial activity suggests moderate spending habits — keep an eye on high-spending days to improve balance and savings.";
+      totalExpense > 0
+        ? " Overall, this week shows where expenses were concentrated — consider reducing high-spend days for better control."
+        : " No expenses were recorded this week — add expenses to generate a clearer weekly report.";
 
-    return `${lead}${mid}${close}${end}`.trim();
+    return `${lead}${mid}${end}`.trim();
   })();
 
   const catRows = Object.entries(expenseByCategory)
     .map(([category, amount]) => ({ category, amount: safeNumber(amount) }))
     .filter((x) => x.amount > 0)
     .sort((a, b) => b.amount - a.amount);
+
+  const palette = ["#3b82f6", "#16a34a", "#f97316", "#ef4444", "#a855f7"];
+  let segments = [];
+
+  if (catRows.length > 0) {
+    const topTwo = catRows.slice(0, 2);
+    const restTotal = catRows.slice(2).reduce((s, it) => s + safeNumber(it.amount), 0);
+    segments = [
+      ...topTwo.map((it) => ({ label: it.category, value: it.amount })),
+      ...(restTotal > 0 ? [{ label: "Other", value: restTotal }] : []),
+    ];
+  } else if (totalExpense > 0) {
+    const dayRows = days
+      .filter((d) => safeNumber(d.expense) > 0)
+      .map((d) => ({ label: d.label, value: safeNumber(d.expense) }))
+      .sort((a, b) => b.value - a.value);
+    const topTwoDays = dayRows.slice(0, 2);
+    const restDaysTotal = dayRows.slice(2).reduce((s, it) => s + safeNumber(it.value), 0);
+    segments = [
+      ...topTwoDays,
+      ...(restDaysTotal > 0 ? [{ label: "Other days", value: restDaysTotal }] : []),
+    ];
+  }
+
+  segments = segments
+    .filter((s) => safeNumber(s.value) > 0)
+    .map((s, i) => ({ ...s, color: palette[i % palette.length] }));
 
   const topCat = catRows[0] || null;
   const bottomCat = catRows.length > 1 ? catRows[catRows.length - 1] : null;
@@ -123,6 +146,8 @@ function computeWeeklyFromTransactions(transactions) {
     totalIncome,
     totalExpense,
     netBalance,
+    expenseByCategory: catRows,
+    segments,
     highestExpenseDay:
       highest && safeNumber(highest.expense) > 0 ? highest.label : "—",
     lowestExpenseDay: lowest ? lowest.label : "—",
@@ -138,6 +163,8 @@ function computeWeeklyFromTransactions(transactions) {
 export function useWeeklyReportData({ enabled = true } = {}) {
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState([]);
+  const [expenseByCategory, setExpenseByCategory] = useState([]);
+  const [segments, setSegments] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [netBalance, setNetBalance] = useState(0);
@@ -163,6 +190,8 @@ export function useWeeklyReportData({ enabled = true } = {}) {
         const computed = computeWeeklyFromTransactions(transactions);
         if (cancelled) return;
         setDays(computed.days);
+        setExpenseByCategory(computed.expenseByCategory);
+        setSegments(computed.segments);
         setTotalIncome(computed.totalIncome);
         setTotalExpense(computed.totalExpense);
         setNetBalance(computed.netBalance);
@@ -186,12 +215,14 @@ export function useWeeklyReportData({ enabled = true } = {}) {
   }, [enabled]);
 
   const hasData = useMemo(() => {
-    return safeNumber(totalIncome) > 0 || safeNumber(totalExpense) > 0;
-  }, [totalIncome, totalExpense]);
+    return safeNumber(totalExpense) > 0;
+  }, [totalExpense]);
 
   return {
     loading,
     days,
+    expenseByCategory,
+    segments,
     totalIncome,
     totalExpense,
     netBalance,
