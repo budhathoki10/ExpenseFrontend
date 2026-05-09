@@ -1,12 +1,24 @@
 import React, { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useToast } from "./ToastProvider.jsx";
-import { AUTH_STORAGE_KEY, getAuth } from "../constants/auth.js";
+import { AUTH_STORAGE_KEY, getAuth, setAuth, setToken } from "../constants/auth.js";
 
 export default function ProtectedRoute({ children }) {
   const location = useLocation();
   const showToast = useToast();
   const notifiedRef = useRef(false);
+
+  // Check for token in URL params (for OAuth redirects)
+  const urlParams = new URLSearchParams(location.search);
+  const tokenFromUrl = urlParams.get('token');
+
+  if (tokenFromUrl) {
+    // Set auth and token from URL
+    setAuth(true);
+    setToken(tokenFromUrl);
+    // Clean up URL
+    window.history.replaceState({}, document.title, location.pathname);
+  }
 
   const isAuthenticated = getAuth();
 

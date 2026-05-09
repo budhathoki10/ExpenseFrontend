@@ -134,7 +134,7 @@ export function useReportData({ monthKey, enabled = true } = {}) {
           if (!cancelled) {
             setTotalIncome(summary.totalIncome);
             setTotalExpense(summary.totalExpense);
-            setNetBalance(summary.netBalance);
+            setNetBalance(safeNumber(summary.totalIncome) - safeNumber(summary.totalExpense));
           }
         } catch {
           // ignore
@@ -150,6 +150,7 @@ export function useReportData({ monthKey, enabled = true } = {}) {
               pie.totalExpense > 0
             ) {
               setTotalExpense(pie.totalExpense);
+              setNetBalance(safeNumber(summary?.totalIncome) - safeNumber(pie.totalExpense));
             }
           }
         } catch {
@@ -219,9 +220,7 @@ export function useReportData({ monthKey, enabled = true } = {}) {
     });
 
     const monthlySummary = buildMonthlySummaryText({
-      income: totalIncome,
       expense: totalExp,
-      balance: netBalance,
       topCategoryName: top?.category,
       topCategoryPct: topPct,
     });
@@ -239,11 +238,10 @@ export function useReportData({ monthKey, enabled = true } = {}) {
   }, [expenseByCategory, totalExpense, totalIncome, netBalance]);
 
   const hasData = useMemo(() => {
-    const inc = safeNumber(totalIncome);
     const exp = safeNumber(computed.totalExp);
     const hasCats = (expenseByCategory || []).length > 0;
-    return inc > 0 || exp > 0 || hasCats;
-  }, [totalIncome, computed.totalExp, expenseByCategory]);
+    return exp > 0 || hasCats;
+  }, [computed.totalExp, expenseByCategory]);
 
   return {
     loading,

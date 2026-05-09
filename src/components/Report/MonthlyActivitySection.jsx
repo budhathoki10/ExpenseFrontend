@@ -1,11 +1,11 @@
 import React from "react";
-import { arcPath, clamp, labelPoint, safeNumber } from "./reportUtils.js";
+import { arcPath, clamp, labelPoint, formatMoney, safeNumber } from "./reportUtils.js";
 
 function PieWithLabels({ segments }) {
-  const size = 260;
+  const size = 380;
   const cx = size / 2;
   const cy = size / 2;
-  const r = 110;
+  const r = 160;
 
   const total =
     safeNumber(segments.reduce((s, it) => s + safeNumber(it.value), 0)) || 1;
@@ -34,6 +34,8 @@ function PieWithLabels({ segments }) {
             <path
               d={arcPath(cx, cy, r, startAngle, endAngle)}
               fill={seg.color}
+              stroke="#fff"
+              strokeWidth="1"
             />
             {pct > 0 ? (
               <text
@@ -68,27 +70,51 @@ function PieWithLabels({ segments }) {
   );
 }
 
+function SegmentLegend({ segments }) {
+  return (
+    <div className="mt-4 grid gap-2 w-full max-w-[380px]">
+      {segments.map((seg, idx) => (
+        <div key={`${seg.label}-legend-${idx}`} className="flex items-center justify-between rounded-2xl bg-[#f8faf9] px-3 py-2 text-sm">
+          <div className="flex items-center gap-3">
+            <span className="h-3 w-3 rounded-full" style={{ background: seg.color }} />
+            <span className="font-medium text-[#1a2b20]">{String(seg.label).slice(0, 20)}</span>
+          </div>
+          <span className="text-gray-600">Rs. {formatMoney(seg.value)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function MonthlyActivitySection({ loading, segments }) {
   return (
-    <section>
+    <section className="h-full">
       <h2 className="text-xl font-semibold text-[#1a2b20]">Monthly Activity</h2>
       <div
         className="mt-3 rounded-2xl p-6"
         style={{ background: "rgba(255,255,255,0.18)" }}
       >
         <div className="bg-white rounded-2xl p-4" style={{ maxWidth: 520 }}>
-          <div className="flex items-center justify-center">
-            {loading ? (
-              <div className="h-[260px] w-[260px] flex items-center justify-center text-sm text-gray-500">
-                Loading...
-              </div>
-            ) : segments && segments.length > 0 ? (
-              <PieWithLabels segments={segments} />
-            ) : (
-              <div className="h-[260px] w-[260px] flex items-center justify-center text-sm text-gray-500">
-                No monthly activity yet.
-              </div>
-            )}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center justify-center">
+              {loading ? (
+                <div className="h-[260px] w-[260px] flex items-center justify-center text-sm text-gray-500">
+                  Loading...
+                </div>
+              ) : segments && segments.length > 0 ? (
+                <PieWithLabels segments={segments} />
+              ) : (
+                <div className="h-[340px] w-[340px] flex items-center justify-center text-sm text-gray-500">
+                  No monthly activity yet.
+                </div>
+              )}
+            </div>
+            {!loading && segments && segments.length > 0 ? (
+              <>
+                <p className="mt-4 text-xs text-gray-500">Expense-only category split.</p>
+                <SegmentLegend segments={segments} />
+              </>
+            ) : null}
           </div>
         </div>
       </div>
