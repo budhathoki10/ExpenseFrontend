@@ -144,7 +144,8 @@ export default function Report() {
         <Sidebar />
 
         <main
-          className="flex-1 bg-transparent relative overflow-y-auto pb-14 pt-16"
+          className="flex-1 bg-transparent relative overflow-y-a
+          uto pb-14 pt-16"
           style={{ marginLeft: "var(--sidebar-width, 256px)" }}
         >
           <div className="p-10 max-w-[1180px]">
