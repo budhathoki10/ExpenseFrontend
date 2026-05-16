@@ -1,14 +1,21 @@
 import React from "react";
-import { arcPath, clamp, labelPoint, formatMoney, safeNumber } from "./reportUtils.js";
+import {
+  arcPath,
+  clamp,
+  labelPoint,
+  formatMoney,
+  safeNumber,
+} from "./reportUtils.js";
 
 function PieWithLabels({ segments }) {
-  const size = 400;
+  const size = 380;
   const cx = size / 2;
   const cy = size / 2;
-  const r = 170;
+  const r = 160;
 
   const total =
-    safeNumber(segments.reduce((sum, it) => sum + safeNumber(it.value), 0)) || 1;
+    safeNumber(segments.reduce((sum, it) => sum + safeNumber(it.value), 0)) ||
+    1;
   let currentAngle = 0;
 
   return (
@@ -31,50 +38,73 @@ function PieWithLabels({ segments }) {
 
         return (
           <g key={`${seg.label}-${idx}`}>
-            <path d={arcPath(cx, cy, r, startAngle, endAngle)} fill={seg.color} stroke="#fff" strokeWidth="1" />
-            {pct > 0 ? (
-              <text
-                x={labelPos.x}
-                y={labelPos.y - 4}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="12"
-                fontWeight="700"
-                fill="#0b1f14"
-              >
-                {pct}%
-              </text>
-            ) : null}
-            {pct > 0 ? (
-              <text
-                x={labelPos.x}
-                y={labelPos.y + 14}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="10"
-                fontWeight="600"
-                fill="#0b1f14"
-              >
-                {String(seg.label).slice(0, 14)}
-              </text>
-            ) : null}
+            <path
+              d={arcPath(cx, cy, r, startAngle, endAngle)}
+              fill={seg.color}
+              stroke="#fff"
+              strokeWidth="3"
+            />
+            {pct > 0 && (
+              <>
+                <text
+                  x={labelPos.x}
+                  y={labelPos.y - 5}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="13"
+                  fontWeight="700"
+                  fill="#fff"
+                >
+                  {pct}%
+                </text>
+                <text
+                  x={labelPos.x}
+                  y={labelPos.y + 12}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="10"
+                  fontWeight="600"
+                  fill="#fff"
+                >
+                  {String(seg.label).slice(0, 14)}
+                </text>
+              </>
+            )}
           </g>
         );
       })}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
+        fill="none"
+        stroke="#e5e7eb"
+        strokeWidth="2"
+      />
     </svg>
   );
 }
 
 function SegmentLegend({ segments }) {
   return (
-    <div className="mt-4 grid gap-2 w-full max-w-[400px]">
+    <div className="mt-5 grid gap-2 w-full">
       {segments.map((seg, idx) => (
-        <div key={`${seg.label}-legend-${idx}`} className="flex items-center justify-between rounded-2xl bg-[#f8faf9] px-3 py-2 text-sm">
+        <div
+          key={`${seg.label}-legend-${idx}`}
+          className="flex items-center justify-between bg-white rounded-xl px-4 py-2.5 shadow-sm border border-gray-100"
+        >
           <div className="flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full" style={{ background: seg.color }} />
-            <span className="font-medium text-[#1a2b20]">{String(seg.label).slice(0, 20)}</span>
+            <span
+              className="h-3 w-3 rounded-full flex-shrink-0"
+              style={{ background: seg.color }}
+            />
+            <span className="text-sm font-medium text-gray-700">
+              {String(seg.label).slice(0, 20)}
+            </span>
           </div>
-          <span className="text-gray-600">Rs. {formatMoney(seg.value)}</span>
+          <span className="text-sm font-semibold text-gray-800">
+            Rs. {formatMoney(seg.value)}
+          </span>
         </div>
       ))}
     </div>
@@ -83,29 +113,28 @@ function SegmentLegend({ segments }) {
 
 export default function WeeklyActivitySection({ loading, segments }) {
   return (
-    <section>
-      <h2 className="text-xl font-semibold text-[#1a2b20]">Weekly Activity</h2>
-      <div
-        className="mt-3 rounded-2xl p-6"
-        style={{ background: "rgba(255,255,255,0.18)" }}
-      >
-        <div className="bg-white rounded-2xl p-4 flex flex-col items-center">
-          {loading ? (
-            <div className="h-[320px] w-[320px] flex items-center justify-center text-sm text-gray-500">
-              Loading...
-            </div>
-          ) : segments && segments.length > 0 ? (
-            <>
-              <PieWithLabels segments={segments} />
-              <p className="mt-4 text-xs text-gray-500">Expense-only category split.</p>
-              <SegmentLegend segments={segments} />
-            </>
-          ) : (
-            <div className="h-[360px] w-[360px] flex items-center justify-center text-sm text-gray-500">
-              No weekly category data yet.
-            </div>
-          )}
-        </div>
+    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <h2 className="text-base font-semibold text-[#1a3328] mb-5">
+        Weekly Activity
+      </h2>
+      <div className="flex flex-col items-center">
+        {loading ? (
+          <div className="h-[320px] flex items-center justify-center text-sm text-gray-400">
+            <div className="w-7 h-7 border-4 border-[#2d6a3f] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : segments && segments.length > 0 ? (
+          <>
+            <PieWithLabels segments={segments} />
+            <p className="mt-2 text-xs text-gray-400">
+              Expense-only category split
+            </p>
+            <SegmentLegend segments={segments} />
+          </>
+        ) : (
+          <div className="h-[320px] flex items-center justify-center text-sm text-gray-400">
+            No weekly category data yet.
+          </div>
+        )}
       </div>
     </section>
   );
