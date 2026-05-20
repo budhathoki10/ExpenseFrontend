@@ -112,10 +112,7 @@ export function validateTransactionForm(form, type, options = {}) {
     Number.isFinite(options.availableBalance) &&
     amountResult.value > options.availableBalance
   ) {
-    errors.amount = `Expense cannot exceed wallet balance of Rs. ${options.availableBalance.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}.`;
+    errors.amount = `Insufficient balance. Available: Rs. ${options.availableBalance.toLocaleString()}.`;
   }
 
   return {
@@ -124,3 +121,4 @@ export function validateTransactionForm(form, type, options = {}) {
     values: normalized,
   };
 }
+  
