@@ -35,10 +35,44 @@ export default function ExpenseStatistics({
     Number(totalExpense) > 0
       ? Number(totalExpense)
       : fallbackFromTransactions.totalExpense;
-  const hasData = sourceStats.length > 0 && sourceTotal > 0;
+  const pieColors = [
+    "#16a34a",
+    "#eab308",
+    "#3b82f6",
+    "#ef4444",
+    "#a855f7",
+    "#ec4899",
+    "#f97316",
+  ];
+  const maxVisibleCategories = 8;
+  const displayStats = useMemo(() => {
+    const sortedStats = (sourceStats || [])
+      .map((stat) => ({
+        ...stat,
+        amount: Number(stat.amount) || 0,
+      }))
+      .filter((stat) => stat.amount > 0)
+      .sort((a, b) => b.amount - a.amount);
+
+    if (sortedStats.length <= maxVisibleCategories) {
+      return sortedStats;
+    }
+
+    const visibleStats = sortedStats.slice(0, maxVisibleCategories - 1);
+    const otherAmount = sortedStats
+      .slice(maxVisibleCategories - 1)
+      .reduce((sum, stat) => sum + stat.amount, 0);
+
+    return [...visibleStats, { category: "Others", amount: otherAmount }];
+  }, [sourceStats]);
+  const displayTotal =
+    Number(sourceTotal) > 0
+      ? Number(sourceTotal)
+      : displayStats.reduce((sum, stat) => sum + stat.amount, 0);
+  const hasData = displayStats.length > 0 && displayTotal > 0;
 
   return (
-    <div className="p-1 h-[380px] flex flex-col relative">
+    <div className="p-1 h-[430px] flex flex-col relative">
       <div className="mb-4 mt-1">
         <span className="text-sm font-medium">Spending Monthly Overview</span>
       </div>
@@ -53,17 +87,8 @@ export default function ExpenseStatistics({
                 background:
                   (hasData &&
                     (() => {
-                      const useStats = sourceStats;
-                      const total = sourceTotal || 1;
-                      const pieColors = [
-                        "#16a34a",
-                        "#eab308",
-                        "#3b82f6",
-                        "#ef4444",
-                        "#a855f7",
-                        "#ec4899",
-                        "#f97316",
-                      ];
+                      const useStats = displayStats;
+                      const total = displayTotal || 1;
                       let cur = 0;
                       const stops = (useStats || [])
                         .map((stat, idx) => {
@@ -89,8 +114,8 @@ export default function ExpenseStatistics({
               <div className="text-sm font-semibold">
                 Rs.
                 {Math.round(
-                  sourceTotal ||
-                    (sourceStats || []).reduce(
+                  displayTotal ||
+                    (displayStats || []).reduce(
                       (s, it) => s + (it.amount || 0),
                       0,
                     ) ||
@@ -102,14 +127,13 @@ export default function ExpenseStatistics({
         </div>
 
         {/* Right: category list with percentages and amounts */}
-        <div className="pr-2 flex-1 flex flex-col gap-4">
+        <div className="pr-2 flex-1 flex flex-col gap-4 overflow-y-auto">
           <div className="flex-1 flex flex-col justify-start pt-2">
-            {(sourceStats || [])
-              .slice(0, 6)
+            {(displayStats || [])
               .map((it, idx) => {
                 const total =
-                  sourceTotal ||
-                    (sourceStats || []).reduce(
+                  displayTotal ||
+                    (displayStats || []).reduce(
                       (s, ii) => s + (ii.amount || 0),
                       0,
                     ) ||
@@ -118,20 +142,13 @@ export default function ExpenseStatistics({
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between py-2 border-b border-white/50"
+                    className="flex items-center justify-between py-1.5 border-b border-white/50"
                   >
                     <div className="flex items-center gap-4">
                       <div
                         className="w-3 h-3 rounded-full ml-8"
                         style={{
-                          background: [
-                            "#16a34a",
-                            "#eab308",
-                            "#3b82f6",
-                            "#ef4444",
-                            "#a855f7",
-                            "#ec4899",
-                          ][idx % 6],
+                          background: pieColors[idx % pieColors.length],
                         }}
                       ></div>
                       <div>
