@@ -102,7 +102,7 @@ export default function Income({ show, onClose, onSaved, onOptimisticSave }) {
       }
       if (msg === "Network Error") {
         msg =
-          "Network Error: could not reach http://localhost:5000. Is the backend running and CORS configured?";
+          "Network Error: could not reach the hosted backend. Is the backend running and CORS configured?";
       }
       toast.error(msg);
     } finally {

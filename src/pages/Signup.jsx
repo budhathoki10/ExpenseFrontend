@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import sideImage from "../assets/log&sign.png";
-import axios from "../constants/api.js";
+import axios, { API_ORIGIN } from "../constants/api.js";
 import { toast } from "react-toastify";
 import { setAuth, setToken, setUserName } from "../constants/auth.js";
 
@@ -108,7 +108,7 @@ export default function Signup() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "/api/loginwithgoogle";
+    window.location.href = `${API_ORIGIN}/api/loginwithgoogle`;
   };
 
   return (

@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import messiProfile from "../assets/image.png";
 import aiRobot from "../assets/robo.webp";
 import { Sparkles, MessageCircle } from "lucide-react";
-// import axios from "../constants/api.js";
 import sendIcon from "../assets/send.png";
-import axios from "axios";
+import axios from "../constants/api.js";
 import { getToken } from "../constants/auth.js";
 
 export default function ChatWidget() {
@@ -44,16 +43,16 @@ export default function ChatWidget() {
     setSending(true);
 
         try {
-      // call backend using axios to /api/dashboardAI (per Postman doc)
+      // call backend using configured API client
       const payload = { message: text };
       let replyText = null;
       try {
         // send as POST so backend receives JSON body at req.body.message
-  const resp = await axios.post(
-   "https://sasquatch-rickety-imaging.ngrok-free.dev/api/generate",
-    payload,
-    { headers: { Authorization: `Bearer ${getToken()}` } }
-  );
+        const resp = await axios.post(
+          "/generate",
+          payload,
+          { headers: { Authorization: `Bearer ${getToken()}` } },
+        );
         const data = resp?.data;
         console.log("ChatWidget: dashboardAI response", data);
         // prefer the backend `data` field if present (your API returns {message, data})

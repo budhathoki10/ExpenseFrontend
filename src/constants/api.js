@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getToken } from "./auth.js";
 
-// const BASE =  "http://localhost:5000/api" || "https://sasquatch-rickety-imaging.ngrok-free.dev/api";
+export const API_ORIGIN = "https://trackerexpensebackend.onrender.com";
+export const API_BASE_URL = `${API_ORIGIN}/api`;
 
-const BASE = "http://localhost:5000/api";
-axios.defaults.baseURL = BASE;
+axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(

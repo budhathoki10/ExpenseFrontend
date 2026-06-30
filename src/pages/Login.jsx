@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logSignImage from "../assets/log&sign.png";
-import axios from "../constants/api.js";
+import axios, { API_ORIGIN } from "../constants/api.js";
 import { toast } from "react-toastify";
 import {
   AUTH_STORAGE_KEY,
@@ -80,7 +80,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "/api/loginwithgoogle";
+    window.location.href = `${API_ORIGIN}/api/loginwithgoogle`;
   };
 
   return (
