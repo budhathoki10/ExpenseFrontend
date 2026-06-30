@@ -15,19 +15,18 @@ export default function ForgotPassword() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
+      await axios.post(
         "/forgetpassword",
         { email },
         { withCredentials: true },
       );
       setSuccess(true);
-      localStorage.setItem("otpEmail", email);
-      localStorage.setItem("otpFlow", "reset");
+      localStorage.setItem("resetEmail", email);
       setTimeout(() => {
-        navigate("/otp", { state: { email, flow: "reset" } });
+        navigate("/reset-password", { state: { email } });
       }, 900);
     } catch (err) {
-      const message = err.response?.data?.message || "Unable to send reset code.";
+      const message = err.response?.data?.message || "Unable to continue password reset.";
       toast(message, { type: "error", autoClose: 1500 });
     } finally {
       setLoading(false);
@@ -48,7 +47,7 @@ export default function ForgotPassword() {
           <div className="text-center mb-10">
             <h1 className="text-4xl italic font-serif text-[#2f5c2b] mb-2">Forgot Password</h1>
             <p className="text-gray-500 text-[15px]">
-              Enter your email and we will send you a one-time reset code.
+              Enter your email to continue resetting your password.
             </p>
           </div>
 
@@ -65,7 +64,7 @@ export default function ForgotPassword() {
               />
             </div>
 
-            {success && <p className="text-sm text-green-600">Reset code sent. Check your inbox.</p>}
+            {success && <p className="text-sm text-green-600">Email verified. Redirecting to reset password...</p>}
 
             <button
               type="submit"
@@ -74,7 +73,7 @@ export default function ForgotPassword() {
                 loading ? "bg-[#86a892] cursor-not-allowed text-white" : "bg-[#2d6a3f] text-white hover:bg-[#245534]"
               }`}
             >
-              {loading ? "Sending code..." : "Send reset code"}
+              {loading ? "Checking email..." : "Continue"}
             </button>
           </form>
 

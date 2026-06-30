@@ -11,7 +11,7 @@ export default function ResetPassword() {
   
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [email, setEmail] = useState(location.state?.email || localStorage.getItem("otpEmail") || "");
+  const [email] = useState(location.state?.email || localStorage.getItem("resetEmail") || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -43,8 +43,7 @@ export default function ResetPassword() {
         { withCredentials: true },
       );
       setSuccess(true);
-      localStorage.removeItem("otpEmail");
-      localStorage.removeItem("otpFlow");
+      localStorage.removeItem("resetEmail");
       setTimeout(() => navigate("/login"), 1200);
     } catch (err) {
         
@@ -99,8 +98,7 @@ export default function ResetPassword() {
                 placeholder="Confirm new password"
               />
             </div>
-
-
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             {success && <p className="text-sm text-green-600">Password reset successfully. Redirecting to login...</p>}
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import sideImage from "../assets/log&sign.png";
 import axios from "../constants/api.js";
 import { toast } from "react-toastify";
+import { setAuth, setToken, setUserName } from "../constants/auth.js";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +30,7 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const data = await axios.post(
+      const response = await axios.post(
         "/register",
         {
           // include multiple keys to match various backend expectations
@@ -43,10 +44,35 @@ export default function Signup() {
         { withCredentials: true },
       );
 
-      console.log("Registration success:", data);
+      console.log("Registration success:", response);
       toast("Registration Sucessfull", { type: "success", autoClose: 1000 });
+
+      setAuth(true, true);
+      const token =
+        response?.data?.token ||
+        response?.data?.accessToken ||
+        response?.data?.data?.token;
+      if (token) {
+        setToken(token, true);
+      }
+
+      const user = response?.data?.user || response?.data?.data?.user || {};
+      const displayRaw =
+        user?.userName ||
+        user?.username ||
+        user?.name ||
+        user?.email ||
+        form.name;
+      if (displayRaw) {
+        const display =
+          typeof displayRaw === "string" && displayRaw.includes("@")
+            ? displayRaw.split("@")[0]
+            : displayRaw;
+        setUserName(display, true);
+      }
+
       setTimeout(() => {
-        navigate("/otp", { state: { email: form.email } });
+        navigate("/dashboard");
       }, 1000);
     } catch (error) {
       console.error("Registration error:", error);
